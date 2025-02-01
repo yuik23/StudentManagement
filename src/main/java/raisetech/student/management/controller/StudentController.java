@@ -2,15 +2,15 @@ package raisetech.student.management.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentsCourses;
-import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.service.StudentService;
 
-@RestController
+@Controller
 public class StudentController {
 
   private StudentService service;
@@ -23,11 +23,14 @@ public class StudentController {
   }
 
   @GetMapping("/studentList")
-  public List<StudentDetail> getStudentList() {
-    List<Student> students = service.searchtStudentList();
+  public String getStudentList(Model model) {
+    List<Student> students = service.searchStudentList();
     List<StudentsCourses> studentsCourses = service.searchStudentsCouseList();
 
-    return converter.convertStudentDetails(students, studentsCourses);
+    //テンプレートファイルの${studentList}にconverter.convertStudentDetails(students, studentsCourses)を紐づける
+    model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
+    //studentList.htmlを紐づける
+    return "studentList";
   }
 
   @GetMapping("/studentsCourseList")

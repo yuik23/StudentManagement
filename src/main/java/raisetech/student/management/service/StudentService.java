@@ -17,7 +17,7 @@ public class StudentService {
     this.repository = repository;
   }
 
-  public List<Student> searchtStudentList() {
+  public List<Student> searchStudentList() {
     return repository.search();
   }
 
