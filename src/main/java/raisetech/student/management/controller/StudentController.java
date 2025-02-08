@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
@@ -38,9 +39,12 @@ public class StudentController {
     return "studentList";
   }
 
-  @GetMapping("/studentsCourseList")
-  public List<StudentsCourses> getStudentsCouseList() {
-    return service.searchStudentsCouseList();
+  //更新画面に遷移
+  @GetMapping("/student/{id}")
+  public String getStudent(@PathVariable int id, Model model) {
+    StudentDetail studentDetail = service.searchStudent(id);
+    model.addAttribute("studentDetail", studentDetail);
+    return "updateStudent";
   }
 
   //登録画面に遷移
@@ -60,6 +64,16 @@ public class StudentController {
     }
     //新規受講生情報を登録する処理を実装
     service.registerStudent(studentDetail);
+    return "redirect:/studentList";
+  }
+
+  @PostMapping("/updateStudent")
+  public String updateStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
+    if (result.hasErrors()) {
+      return "updateStudent";
+    }
+    //新規受講生情報を登録する処理を実装
+    service.updateStudent(studentDetail);
     return "redirect:/studentList";
   }
 }

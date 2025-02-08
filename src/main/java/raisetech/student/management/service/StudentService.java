@@ -24,8 +24,17 @@ public class StudentService {
     return repository.search();
   }
 
+  public StudentDetail searchStudent(int id) {
+    Student student = repository.searchStudent(id);
+    List<StudentsCourses> studentsCourses = repository.searchStudentsCourses(student.getId());
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.setStudent(student);
+    studentDetail.setStudentsCourses(studentsCourses);
+    return studentDetail;
+  }
+
   public List<StudentsCourses> searchStudentsCouseList() {
-    return repository.searchStudentsCourses();
+    return repository.searchStudentsCoursesList();
   }
 
   @Transactional
@@ -37,6 +46,15 @@ public class StudentService {
       studentsCourses.setCourseStartAt(LocalDateTime.now());
       studentsCourses.setCourseEndAt(LocalDateTime.now().plusYears(1));
       repository.registerStudentCourses(studentsCourses);
+    }
+  }
+
+  @Transactional
+  public void updateStudent(StudentDetail studentDetail) {
+    repository.updateStudent(studentDetail.getStudent());
+    //コース情報登録
+    for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
+      repository.updateStudentCourses(studentsCourses);
     }
   }
 }
