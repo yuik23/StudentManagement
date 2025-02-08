@@ -72,7 +72,7 @@ public class StudentController {
     if (result.hasErrors()) {
       return "updateStudent";
     }
-    //新規受講生情報を登録する処理を実装
+    //受講生情報を更新する処理を実装
     service.updateStudent(studentDetail);
     return "redirect:/studentList";
   }
