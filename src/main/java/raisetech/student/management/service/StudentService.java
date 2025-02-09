@@ -38,7 +38,7 @@ public class StudentService {
   }
 
   @Transactional
-  public void registerStudent(StudentDetail studentDetail) {
+  public StudentDetail registerStudent(StudentDetail studentDetail) {
     repository.registerStudent(studentDetail.getStudent());
     //コース情報登録
     for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
@@ -47,6 +47,7 @@ public class StudentService {
       studentsCourses.setCourseEndAt(LocalDateTime.now().plusYears(1));
       repository.registerStudentCourses(studentsCourses);
     }
+    return studentDetail;
   }
 
   @Transactional
