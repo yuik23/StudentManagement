@@ -65,7 +65,6 @@ public class StudentController {
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
-
   @PutMapping("/updateStudent")
   public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
     service.updateStudent(studentDetail);
