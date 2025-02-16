@@ -4,15 +4,78 @@
 <mapper namespace="raisetech.student.management.repository.StudentRepository">
 
   <!-- 受講生の全件検索 -->
-  <select id="search" resultType="raisetech.student.management.data.Student">
+  <select
+    id="search"
+    resultType="raisetech.student.management.data.Student">
     SELECT *
     FROM students
   </select>
 
   <!-- 受講生検索 -->
-  <select id="searchStudent" resultType="raisetech.student.management.data.Student">
+  <select
+    id="searchStudent"
+    resultType="raisetech.student.management.data.Student">
     SELECT *
-    FROM students WHERE id = #{id}
+    FROM students
+    WHERE id = #{id}
   </select>
 
+  <!-- 受講生コース情報の全件検索 -->
+  <select
+    id="searchStudentCourseList"
+    resultType="raisetech.student.management.data.StudentCourse">
+    SELECT *
+    FROM students_courses
+  </select>
+
+  <!-- 受講生IDに紐づく受講生コース情報を検索 -->
+  <select
+    id="searchStudentCourse"
+    resultType="raisetech.student.management.data.StudentCourse">
+    SELECT *
+    FROM students_courses
+    WHERE student_id = #{studentId}
+  </select>
+
+  <!-- 受講生新規登録
+   IDに関しては自動採番を行う -->
+  <insert
+    id="registerStudent"
+    useGeneratedKeys="true"
+    keyProperty="id">
+    insert into students (name, kana_name, nickname, email, area, age, sex, remark, is_deleted)
+    values (#{name}, #{kanaName}, #{nickname}, #{email}, #{area}, #{age}, #{sex}, #{remark}, false)
+  </insert>
+
+  <!-- 受講生コース情報新規登録
+   IDに関しては自動採番を行う -->
+  <insert
+    id="registerStudentCourse"
+    useGeneratedKeys="true"
+    keyProperty="id">
+    insert into students_courses (student_id, course_name, course_start_at, course_end_at)
+    values (#{studentId}, #{courseName}, #{courseStartAt}, #{courseEndAt})
+  </insert>
+
+  <!-- 受講生更新 -->
+  <update id="updateStudent">
+    update students set
+    name=#{name},
+    kana_name=#{kanaName},
+    nickname=#{nickname},
+    email=#{email},
+    area=#{area},
+    age=#{age},
+    sex=#{sex},
+    remark=#{remark},
+    is_deleted=#{isDeleted}
+    WHERE id=#{id}
+  </update>
+
+  <!-- 受講生コース情報のコース名更新 -->
+  <update id="updateStudentCourse">
+    update students_courses set
+    course_name=#{courseName}
+    WHERE id=#{id}
+  </update>
 </mapper>
