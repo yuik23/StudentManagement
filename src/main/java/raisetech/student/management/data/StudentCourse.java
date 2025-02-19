@@ -13,6 +13,7 @@ public class StudentCourse {
   @Min(1)
   private int id;
 
+  @Min(1)
   private int studentId;
 
   @NotBlank
