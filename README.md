@@ -72,6 +72,7 @@
 
   ・受講生コース (students_courses)
 
-   <img width="526" alt="image" src="https://github.com/user-attachments/assets/1d91aa11-d047-4dd3-8e27-ff734138c243" />
+   <img width="537" alt="image" src="https://github.com/user-attachments/assets/71589d08-d51b-4f4e-adbe-6d89b49bea03" />
+
 
    
