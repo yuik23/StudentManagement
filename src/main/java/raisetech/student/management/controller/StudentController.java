@@ -1,5 +1,6 @@
 package raisetech.student.management.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import java.util.List;
@@ -35,6 +36,7 @@ public class StudentController {
    *
    * @return 受講生一覧(全件)
    */
+  @Operation(summary = "受講生詳細一覧検索", description = "受講生の一覧を検索します。")
   @GetMapping("/studentList")
   public List<StudentDetail> getStudentList() {
     return service.searchStudentList();
@@ -46,6 +48,7 @@ public class StudentController {
    * @param id 受講生ID
    * @return 受講生
    */
+  @Operation(summary = "受講生詳細検索", description = "IDに紐づく任意の受講生の情報を検索します。")
   @GetMapping("/student/{id}")
   public StudentDetail getStudent(
       @PathVariable @Min(value = 1) int id) {
@@ -58,7 +61,7 @@ public class StudentController {
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
-  //登録処理
+  @Operation(summary = "受講生詳細登録", description = "受講生を登録します。")
   @PostMapping("/registerStudent")
   public ResponseEntity<StudentDetail> registerStudent(
       @RequestBody @Valid StudentDetail studentDetail) {
@@ -72,6 +75,7 @@ public class StudentController {
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
+  @Operation(summary = "受講生詳細更新", description = "受講生詳細を更新します。")
   @PutMapping("/updateStudent")
   public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
     service.updateStudent(studentDetail);
