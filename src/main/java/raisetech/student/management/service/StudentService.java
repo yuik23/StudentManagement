@@ -2,6 +2,7 @@ package raisetech.student.management.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.MemberNotFoundException;
 import raisetech.student.management.repository.StudentRepository;
 
 /**
@@ -32,8 +34,10 @@ public class StudentService {
    * @return 受講生詳細一覧(全件)
    */
   public List<StudentDetail> searchStudentList() {
+
     List<Student> studentList = repository.search();
     List<StudentCourse> studentCourseList = repository.searchStudentCourseList();
+
     return converter.convertStudentDetails(studentList, studentCourseList);
   }
 
@@ -43,10 +47,14 @@ public class StudentService {
    * @param id 受講生ID
    * @return 受講生詳細
    */
-  public StudentDetail searchStudent(int id) {
-    Student student = repository.searchStudent(id);
-    List<StudentCourse> studentCourse = repository.searchStudentCourse(student.getId());
-    return new StudentDetail(student, studentCourse);
+  public StudentDetail searchStudent(int id) throws MemberNotFoundException {
+
+    Optional<Student> student = repository.searchStudent(id);
+
+    List<StudentCourse> studentCourse = repository.searchStudentCourse(
+        student.orElseThrow(MemberNotFoundException::new).getId());
+
+    return new StudentDetail(student.get(), studentCourse);
   }
 
   /**
@@ -57,9 +65,11 @@ public class StudentService {
    */
   @Transactional
   public StudentDetail registerStudent(StudentDetail studentDetail) {
+
     Student student = studentDetail.getStudent();
 
     repository.registerStudent(student);
+
     //コース情報登録
     studentDetail.getStudentCourseList().forEach(studentCourse -> {
       initStudentsCourse(studentCourse, student);
@@ -75,6 +85,7 @@ public class StudentService {
    * @param student       受講生
    */
   private void initStudentsCourse(StudentCourse studentCourse, Student student) {
+
     LocalDateTime now = LocalDateTime.now();
 
     studentCourse.setStudentId(student.getId());
@@ -89,7 +100,9 @@ public class StudentService {
    */
   @Transactional
   public void updateStudent(StudentDetail studentDetail) {
+
     repository.updateStudent(studentDetail.getStudent());
+
     //コース情報登録
     studentDetail.getStudentCourseList()
         .forEach(studentCourse -> repository.updateStudentCourse(studentCourse));
