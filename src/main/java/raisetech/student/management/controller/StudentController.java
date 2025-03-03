@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import raisetech.student.management.domain.StudentDetail;
-import raisetech.student.management.exception.TestException;
+import raisetech.student.management.exception.MemberNotFoundException;
 import raisetech.student.management.service.StudentService;
 
 /**
@@ -51,7 +51,7 @@ public class StudentController {
   @Operation(summary = "受講生詳細検索", description = "IDに紐づく任意の受講生の情報を検索します。")
   @GetMapping("/student/{id}")
   public StudentDetail getStudent(
-      @PathVariable @Min(value = 1) int id) {
+      @PathVariable @Min(value = 1) int id) throws MemberNotFoundException {
     return service.searchStudent(id);
   }
 
@@ -80,15 +80,5 @@ public class StudentController {
   public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
     service.updateStudent(studentDetail);
     return ResponseEntity.ok("更新処理が成功しました。");
-  }
-
-  /**
-   * テスト用例外を発生させる
-   *
-   * @throws TestException
-   */
-  @GetMapping("/throwException")
-  public void throwException() throws TestException {
-    throw new TestException("エラーが発生しました。");
   }
 }
