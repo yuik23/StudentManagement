@@ -51,7 +51,7 @@ public class StudentService {
 
     Optional<Student> student = repository.searchStudent(id);
 
-    //idが存在しない場合は例外をなげる
+    //studentCourseを取得する際idが存在しない場合は例外を発生させる
     List<StudentCourse> studentCourse = repository.searchStudentCourse(
         student.orElseThrow(MemberNotFoundException::new).getId());
 
