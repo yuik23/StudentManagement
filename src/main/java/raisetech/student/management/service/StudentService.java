@@ -51,9 +51,9 @@ public class StudentService {
 
     Optional<Student> student = repository.searchStudent(id);
 
-    //studentCourseを取得する際idが存在しない場合は例外を発生させる
+    //studentCourseを取得する際idが存在しない場合は例外を発生させる(ステータスコード404を返すようにするため)
     List<StudentCourse> studentCourse = repository.searchStudentCourse(
-        student.orElseThrow(MemberNotFoundException::new).getId());
+        student.orElseThrow(() -> new MemberNotFoundException("member not found")).getId());
 
     return new StudentDetail(student.get(), studentCourse);
   }
@@ -73,7 +73,7 @@ public class StudentService {
 
     //コース情報登録
     studentDetail.getStudentCourseList().forEach(studentCourse -> {
-      initStudentsCourse(studentCourse, student);
+      initStudentsCourse(studentCourse, student.getId());
       repository.registerStudentCourse(studentCourse);
     });
     return studentDetail;
@@ -83,13 +83,13 @@ public class StudentService {
    * 受講生コース情報を登録する際の初期情報を設定する
    *
    * @param studentCourse 受講生コース情報
-   * @param student       受講生
+   * @param id            受講生ID
    */
-  private void initStudentsCourse(StudentCourse studentCourse, Student student) {
+  private void initStudentsCourse(StudentCourse studentCourse, int id) {
 
     LocalDateTime now = LocalDateTime.now();
 
-    studentCourse.setStudentId(student.getId());
+    studentCourse.setStudentId(id);
     studentCourse.setCourseStartAt(now);
     studentCourse.setCourseEndAt(now.plusYears(1));
   }
